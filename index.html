@@ -1,181 +1,598 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Temporary Chat</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disaster Response Chatbot - India Emergency Help</title>
     <style>
-        :root{--bg:#0f1724;--panel:#0b1220;--user:#0ea5a4;--bot:#111827;--muted:#94a3b8}
-        html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,system-ui,-apple-system,"Helvetica Neue",Arial}
-        body{background:linear-gradient(180deg,#071022 0%, #0b1220 100%);display:flex;align-items:center;justify-content:center;padding:24px;color:#e6eef8}
-        .chat{width:100%;max-width:720px;height:80vh;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(2,6,23,.6)}
-        header{padding:12px 16px;background:linear-gradient(90deg,rgba(255,255,255,0.02),transparent);display:flex;align-items:center;gap:12px}
-        header h1{font-size:16px;margin:0;font-weight:600}
-        header .meta{color:var(--muted);font-size:12px}
-        .messages{flex:1;padding:16px;overflow:auto;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
-        .msg{max-width:78%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.3;word-wrap:break-word}
-        .msg.user{align-self:flex-end;background:linear-gradient(180deg,var(--user),#10b981);color:#042022;border-bottom-right-radius:6px}
-        .msg.bot{align-self:flex-start;background:linear-gradient(180deg,#0b1320,#071022);color:#cfe7ff;border-bottom-left-radius:6px}
-        .meta-row{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin-bottom:6px}
-        .controls{display:flex;padding:12px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.01));gap:8px}
-        form{display:flex;gap:8px;flex:1}
-        textarea{resize:none;height:48px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;flex:1;outline:none}
-        button{background:#0ea5a4;color:#042022;border:none;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
-        .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 10px}
-        small.hint{color:var(--muted);font-size:12px;margin-left:auto}
-        .muted{color:var(--muted)}
-        .typing{width:48px;height:14px;display:flex;gap:6px;align-items:center}
-        .dot{width:8px;height:8px;border-radius:999px;background:#9ca3af;opacity:.9;transform:translateY(0)}
-        @keyframes blink {0%{opacity:.2}50%{opacity:1}100%{opacity:.2}}
-        .dot:nth-child(1){animation:blink 1s infinite .1s}
-        .dot:nth-child(2){animation:blink 1s infinite .3s}
-        .dot:nth-child(3){animation:blink 1s infinite .5s}
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+        background-color: #f5f5f5;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .chatbot-container {
+        width: 400px;
+        height: 600px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .chatbot-header {
+        background: linear-gradient(135deg, #e53e3e, #c53030);
+        color: white;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header-avatar {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .header-info h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .header-info p {
+        font-size: 12px;
+        opacity: 0.9;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .header-btn {
+        width: 28px;
+        height: 28px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .chat-messages {
+        flex: 1;
+        padding: 16px;
+        overflow-y: auto;
+        background: #f8f9fa;
+      }
+
+      .message {
+        margin-bottom: 16px;
+      }
+
+      .message.bot {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .message-avatar {
+        width: 24px;
+        height: 24px;
+        background: #e53e3e;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      .message-content {
+        background: white;
+        padding: 12px 16px;
+        border-radius: 16px;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        max-width: 280px;
+        line-height: 1.4;
+        font-size: 14px;
+      }
+
+      .message.user .message-content {
+        background: #007bff;
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 16px;
+      }
+
+      .quick-actions {
+        padding: 0 16px 8px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .quick-btn {
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        background: white;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .quick-btn:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e0;
+      }
+
+      .quick-btn.emergency {
+        background: #fed7d7;
+        border-color: #feb2b2;
+        color: #c53030;
+      }
+
+      .input-section {
+        padding: 16px;
+        border-top: 1px solid #e2e8f0;
+        background: white;
+      }
+
+      .input-container {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      .message-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 24px;
+        outline: none;
+        font-size: 14px;
+        resize: none;
+        font-family: inherit;
+      }
+
+      .message-input:focus {
+        border-color: #3182ce;
+      }
+
+      .send-btn {
+        width: 40px;
+        height: 40px;
+        background: #a0aec0;
+        border: none;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+
+      .send-btn:hover {
+        background: #718096;
+      }
+
+      .send-btn.active {
+        background: #3182ce;
+      }
+
+      .emergency-contacts {
+        background: #fed7d7;
+        margin: 0 16px 16px;
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 4px solid #e53e3e;
+      }
+
+      .emergency-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #c53030;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .contacts-text {
+        font-size: 12px;
+        color: #2d3748;
+        line-height: 1.4;
+      }
+
+      .welcome-message {
+        color: #4a5568;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .highlight {
+        color: #e53e3e;
+        font-weight: 500;
+      }
+
+      @media (max-width: 480px) {
+        .chatbot-container {
+          width: 100%;
+          height: 100vh;
+          border-radius: 0;
+        }
+      }
+
+      .typing-indicator {
+        display: none;
+        padding: 8px 16px;
+        font-style: italic;
+        color: #718096;
+        font-size: 12px;
+      }
+
+      .typing-indicator.show {
+        display: block;
+      }
     </style>
-</head>
-<body>
-    <div class="chat" role="application" aria-label="Temporary chat">
-        <header>
-            <div>
-                <h1>Temporary Chat</h1>
-                <div class="meta">Local-only demo • messages stored in browser</div>
-            </div>
-            <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
-                <button id="clearBtn" class="btn-ghost" title="Clear conversation">Clear</button>
-                <small class="hint">Press Enter to send</small>
-            </div>
-        </header>
-
-        <div id="messages" class="messages" aria-live="polite"></div>
-
-        <div class="controls">
-            <form id="form" autocomplete="off">
-                <textarea id="input" aria-label="Type a message" placeholder="Write a message..." rows="1"></textarea>
-                <button type="submit" title="Send">Send</button>
-            </form>
+  </head>
+  <body>
+    <div class="chatbot-container">
+      <!-- Header -->
+      <div class="chatbot-header">
+        <div class="header-left">
+          <div class="header-avatar">IN</div>
+          <div class="header-info">
+            <h3>Disaster Response Chatbot</h3>
+            <p>India Emergency Help</p>
+          </div>
         </div>
+        <div class="header-actions">
+          <button class="header-btn">⚡</button>
+          <button class="header-btn">✕</button>
+        </div>
+      </div>
+
+      <!-- Messages Area -->
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+          <div class="message-avatar">🤖</div>
+          <div class="message-content welcome-message">
+            <strong>Welcome to India Disaster Response Chatbot!</strong
+            ><br /><br />
+            I can help you with:<br />
+            • State-wise disaster helpline numbers<br />
+            • Disaster safety instructions (Earthquake, Flood, Fire, Cyclone,
+            Tsunami, Landslide)<br />
+            • Emergency contact numbers<br />
+            • General disaster preparedness advice<br /><br />
+            <span class="highlight"
+              >💡 Try typing: 'help fire', 'earthquake help', 'flood safety', or
+              use quick action buttons!</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button
+          class="quick-btn emergency"
+          onclick="sendQuickMessage('emergency')"
+        >
+          Emergency
+        </button>
+        <button class="quick-btn" onclick="sendQuickMessage('help earthquake')">
+          Earthquake
+        </button>
+        <button class="quick-btn" onclick="sendQuickMessage('help flood')">
+          Flood
+        </button>
+        <button class="quick-btn" onclick="sendQuickMessage('help fire')">
+          Fire
+        </button>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div class="typing-indicator" id="typingIndicator">Bot is typing...</div>
+
+      <!-- Emergency Contacts -->
+      <div class="emergency-contacts">
+        <div class="emergency-title">🚨 Emergency Contacts:</div>
+        <div class="contacts-text">
+          Police: 100 | Fire: 101 | Ambulance: 102 | Women: 1091 | Child: 1098 |
+          Disaster: 108
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <div class="input-section">
+        <div class="input-container">
+          <textarea
+            class="message-input"
+            id="messageInput"
+            placeholder="Type your message..."
+            rows="1"
+            onkeypress="handleKeyPress(event)"
+            oninput="adjustTextareaHeight(this)"
+          ></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+            ▲
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        // Temporary chat — client-side only, small echo bot for testing
-        const STORAGE_KEY = 'temp_chat_messages_v1';
-        const messagesEl = document.getElementById('messages');
-        const form = document.getElementById('form');
-        const input = document.getElementById('input');
-        const clearBtn = document.getElementById('clearBtn');
+      // Disaster chatbot data
+      const stateHelplines = {
+        'andhra pradesh': '108, 112',
+        'arunachal pradesh': '1070, 112',
+        assam: '1077, 1070, 0361-2237219, 9401044617',
+        bihar: '1078, 18002456145',
+        chhattisgarh: '1070, 112',
+        delhi: '1077, Central Control Room: 011-24611210',
+        goa: '108, 112',
+        gujarat: '1078, 079-23276944, 1077',
+        haryana: '112, NDRF: 9711077372',
+        'himachal pradesh': '1100, 1070, 1077',
+        jharkhand: '1070, 112',
+        karnataka: '080-1070, 080-22340676',
+        kerala: '1070, 1077',
+        'madhya pradesh': '108, 1070',
+        maharashtra: '1916, 108',
+        manipur: '1070, 112',
+        meghalaya: '108, 1070',
+        mizoram: '1070, 112',
+        nagaland: '1070, 112',
+        odisha: '1078, 1093, 112, 1800 200 4444',
+        punjab: '8968215758, NDRF: 011-26107953',
+        rajasthan: '1078',
+        sikkim: '1070, 112',
+        'tamil nadu': '1070, 1078, 1077',
+        telangana: '108, 112, 211111111',
+        tripura: '1070, 112',
+        'uttar pradesh': '1070, 112',
+        uttarakhand: '1070, 9557444486',
+        'west bengal': '1800-11-3330, 1070, 2214-4052',
+        'jammu and kashmir': '1077',
+        ladakh: '1077',
+        puducherry: '1077',
+        chandigarh: '1077',
+        'daman and diu': '1077',
+        'dadra and nagar haveli': '1077',
+        lakshadweep: '1077',
+        'andaman and nicobar islands': '1077',
+      };
 
-        function loadMessages() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                return raw ? JSON.parse(raw) : [];
-            } catch {
-                return [];
-            }
+      const disasterInstructions = {
+        earthquake: [
+          '🚨 EARTHQUAKE SAFETY INSTRUCTIONS:',
+          '• Drop, Cover, and Hold On immediately',
+          '• Stay away from windows, glass, and heavy objects',
+          '• If indoors: Stay inside, get under a sturdy table/desk',
+          '• If outdoors: Move to an open area away from buildings, trees, and power lines',
+          '• If in a vehicle: Stop safely and stay inside',
+          '• After shaking stops: Check for injuries and damage',
+          '• Be prepared for aftershocks',
+          '• Listen to emergency broadcasts for updates',
+        ],
+        flood: [
+          '🌊 FLOOD SAFETY INSTRUCTIONS:',
+          'IMMEDIATE ACTIONS:',
+          '• Listen to weather alerts, move to higher ground if flash flood likely',
+          '• Avoid crossing moving water: Six inches can knock down a person',
+          '• Do not drive into flooded roads; abandon car if trapped and safely climb to higher ground',
+          '',
+          'PREPARATION:',
+          '• Elevate electrical and valuable items; turn off utilities before evacuation',
+          '• Prepare an emergency kit and ensure outdoor objects are secured',
+          '• Keep important documents in waterproof containers',
+          '• Stay tuned to weather updates and emergency broadcasts',
+        ],
+        fire: [
+          '🔥 FIRE SAFETY INSTRUCTIONS:',
+          'PREVENTION MEASURES:',
+          '• Establish clear evacuation routes with proper signage and conduct regular drills',
+          '• Install smoke detectors and fire alarms in high-risk areas',
+          '• Use fire-resistant materials for furnishings and construction',
+          '',
+          'DURING FIRE:',
+          '• Know how to raise alarm, call fire brigade (101), and evacuate safely',
+          '• Get out of the building immediately',
+          '• If trapped, close doors and seal gaps with wet cloths',
+          '• Stay low to avoid smoke inhalation',
+          '• Never use elevators during a fire; evacuate using stairs',
+          '• Stop, Drop, and Roll if your clothes catch fire',
+        ],
+        cyclone: [
+          '🌀 CYCLONE SAFETY INSTRUCTIONS:',
+          'PREPARATION BEFORE CYCLONE SEASON:',
+          '• Secure roof tiles, repair doors/windows, trim trees',
+          '• Store emergency food, water, medicine, and light sources',
+          '• Prepare emergency kit and secure outdoor objects',
+          '',
+          'WHEN WARNING IS ISSUED:',
+          '• Move away from low-lying coastal areas early',
+          '• Board up glass windows; remove or secure loose items outside',
+          '• Switch off electricity; shelter in strong, safe interior rooms',
+          "• Do not go out during lull (eye of cyclone); wait for official 'all clear'",
+        ],
+      };
+
+      function processMessage(message) {
+        const messageLower = message.toLowerCase();
+
+        // Emergency response
+        if (
+          messageLower.includes('emergency') ||
+          messageLower.includes('danger')
+        ) {
+          return getEmergencyResponse();
         }
 
-        function saveMessages(list) {
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch {}
+        // State helpline detection
+        for (const [state, helpline] of Object.entries(stateHelplines)) {
+          if (messageLower.includes(state)) {
+            return `📍 ${state.toUpperCase()} Disaster Helpline Numbers:\n\n🚨 State Emergency Numbers:\n• ${helpline}\n\n📞 Additional Emergency Contacts:\n• Police: 100\n• Fire: 101\n• Ambulance: 102\n• National Disaster Management: 108\n• NDRF: 011-24363260\n• NDMA: 011-26701728\n\n💡 Available 24/7 for disaster-related emergencies`;
+          }
         }
 
-        function appendMessage(role, text, opts = {}) {
-            const el = document.createElement('div');
-            el.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-            if (opts.showMeta) {
-                const meta = document.createElement('div');
-                meta.className = 'meta-row';
-                const who = document.createElement('div');
-                who.textContent = role === 'user' ? 'You' : 'Bot';
-                const time = document.createElement('div');
-                time.className = 'muted';
-                time.textContent = new Date().toLocaleTimeString();
-                meta.appendChild(who);
-                meta.appendChild(time);
-                el.appendChild(meta);
-            }
-            const content = document.createElement('div');
-            content.textContent = text;
-            el.appendChild(content);
-            messagesEl.appendChild(el);
-            messagesEl.scrollTop = messagesEl.scrollHeight;
+        // Disaster type detection
+        for (const [disaster, instructions] of Object.entries(
+          disasterInstructions
+        )) {
+          if (
+            messageLower.includes(disaster) ||
+            messageLower.includes(`help ${disaster}`) ||
+            messageLower.includes(`${disaster} help`)
+          ) {
+            return (
+              instructions.join('\n') +
+              '\n\n📞 EMERGENCY CONTACTS:\n• Police: 100\n• Fire: 101\n• Ambulance: 102\n• Disaster Management: 108\n• NDRF: 011-24363260\n• NDMA: 011-26701728'
+            );
+          }
         }
 
-        function renderAll(list) {
-            messagesEl.innerHTML = '';
-            for (const m of list) appendMessage(m.role, m.text, { showMeta: true });
+        // General helplines
+        if (
+          messageLower.includes('helpline') ||
+          messageLower.includes('number') ||
+          messageLower.includes('contact')
+        ) {
+          return getGeneralHelplines();
         }
 
-        function botReplyTo(text) {
-            // Simple deterministic "echo with help" reply for local testing
-            text = (text || '').trim();
-            if (!text) return "I didn't receive a message. Try typing something.";
-            if (/help/i.test(text)) return "This is a temporary local chat. It echoes your messages. Try: 'reverse: hello' or ask for 'time'.";
-            if (/^reverse:/i.test(text)) return text.split(':').slice(1).join(':').trim().split('').reverse().join('');
-            if (/time/i.test(text)) return `Local time: ${new Date().toLocaleString()}`;
-            // short simulated "thinking"
-            return `Echo: ${text}`;
+        return getDefaultResponse();
+      }
+
+      function getEmergencyResponse() {
+        return `🚨 EMERGENCY RESPONSE:\n\nIMMEDIATE ACTIONS:\n• Call 100 for Police\n• Call 101 for Fire\n• Call 102 for Ambulance\n• Call 108 for Disaster Management\n\nSTAY CALM AND FOLLOW THESE STEPS:\n1. Ensure your safety first\n2. Call emergency services immediately\n3. Follow their instructions\n4. Help others if it's safe to do so\n5. Stay in a safe location\n\nFor specific disaster instructions, mention the type of disaster.`;
+      }
+
+      function getGeneralHelplines() {
+        return `📞 EMERGENCY HELPLINE NUMBERS:\n\n🚨 IMMEDIATE EMERGENCY:\n• Police: 100\n• Fire: 101\n• Ambulance: 102\n• Disaster Management: 108\n\n👥 SPECIALIZED HELPLINES:\n• Women Helpline: 1091\n• Child Helpline: 1098\n• Senior Citizen Helpline: 1090\n\n🏛️ DISASTER MANAGEMENT:\n• NDRF: 011-24363260\n• NDMA: 011-26701728\n• State Disaster Helpline: 1077\n\nFor state-specific help, mention your state name.`;
+      }
+
+      function getDefaultResponse() {
+        return `I'm here to help with disaster-related emergencies in India.\n\nI can assist you with:\n• State-wise disaster helpline numbers\n• Safety instructions for different disasters\n• Emergency contact numbers\n• Disaster preparedness advice\n\n📍 State-Specific Help Available!\nPlease tell me which state you're in for personalized assistance:\n• Just type your state name (e.g., 'Maharashtra', 'Kerala', 'Tamil Nadu')\n• Or mention it in a sentence (e.g., 'I'm in Gujarat and need help')\n\nOther options:\n• Type disaster name for safety instructions\n• 'help [disaster]' or '[disaster] help' (e.g., 'help fire', 'earthquake help')\n• 'emergency' for immediate help\n• 'helpline' for contact numbers`;
+      }
+
+      function addMessage(text, isUser = false) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+        if (!isUser) {
+          messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">${text.replace(
+                      /\n/g,
+                      '<br>'
+                    )}</div>
+                `;
+        } else {
+          messageDiv.innerHTML = `
+                    <div class="message-content">${text}</div>
+                `;
         }
 
-        function showTypingIndicator() {
-            const el = document.createElement('div');
-            el.className = 'msg bot';
-            el.id = 'typing';
-            const dots = document.createElement('div');
-            dots.className = 'typing';
-            dots.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-            el.appendChild(dots);
-            messagesEl.appendChild(el);
-            messagesEl.scrollTop = messagesEl.scrollHeight;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function sendMessage() {
+        const input = document.getElementById('messageInput');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Add user message
+        addMessage(message, true);
+        input.value = '';
+        adjustTextareaHeight(input);
+
+        // Show typing indicator
+        showTypingIndicator();
+
+        // Simulate bot response delay
+        setTimeout(() => {
+          hideTypingIndicator();
+          const response = processMessage(message);
+          addMessage(response);
+        }, 1000 + Math.random() * 1000);
+      }
+
+      function sendQuickMessage(message) {
+        document.getElementById('messageInput').value = message;
+        sendMessage();
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
         }
+      }
 
-        function removeTypingIndicator() {
-            const t = document.getElementById('typing');
-            if (t) t.remove();
+      function adjustTextareaHeight(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+
+        // Update send button state
+        const sendBtn = document.getElementById('sendBtn');
+        if (textarea.value.trim()) {
+          sendBtn.classList.add('active');
+        } else {
+          sendBtn.classList.remove('active');
         }
+      }
 
-        // initialize
-        const state = loadMessages();
-        renderAll(state);
+      function showTypingIndicator() {
+        document.getElementById('typingIndicator').classList.add('show');
+      }
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            const text = input.value.trim();
-            if (!text) return;
-            const userMsg = {role: 'user', text, ts: Date.now()};
-            state.push(userMsg);
-            saveMessages(state);
-            appendMessage('user', text, {showMeta: true});
-            input.value = '';
-            input.focus();
+      function hideTypingIndicator() {
+        document.getElementById('typingIndicator').classList.remove('show');
+      }
 
-            // bot "typing" then reply
-            showTypingIndicator();
-            const delay = Math.min(1200 + text.length * 25, 2500);
-            setTimeout(() => {
-                removeTypingIndicator();
-                const reply = {role: 'bot', text: botReplyTo(text), ts: Date.now()};
-                state.push(reply);
-                saveMessages(state);
-                appendMessage('bot', reply.text, {showMeta: true});
-            }, delay);
-        });
-
-        // ctrl+Enter inserts newline, Enter sends
-        input.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                form.requestSubmit();
-            }
-        });
-
-        clearBtn.addEventListener('click', () => {
-            if (!confirm('Clear chat history? This removes local messages.')) return;
-            localStorage.removeItem(STORAGE_KEY);
-            state.length = 0;
-            renderAll(state);
-            input.focus();
-        });
-
-        // focus input on load
-        window.addEventListener('load', () => input.focus());
+      // Initialize
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('messageInput').focus();
+      });
     </script>
-</body>
+  </body>
 </html>
