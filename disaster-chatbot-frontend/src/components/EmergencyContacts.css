@@ -1,0 +1,72 @@
+.emergency-contacts {
+  background: #ecf0f1;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.emergency-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.emergency-header h3 {
+  color: #e74c3c;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.emergency-icon {
+  color: #e74c3c;
+}
+
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.contact-btn:hover {
+  background: #f8f9fa;
+  border-color: #e74c3c;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-name {
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #2c3e50;
+}
+
+.service-number {
+  font-size: 0.875rem;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.emergency-note {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  text-align: center;
+  margin: 0;
+}
